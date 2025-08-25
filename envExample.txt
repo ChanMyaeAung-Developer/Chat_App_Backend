@@ -1,9 +1,0 @@
-MONGODB_URL=mongodb+srv://miss1003you:yOXstRuGMcEJipUh@cluster0.qx1xipu.mongodb.net/chat_db?retryWrites=true&w=majority&appName=Cluster0
-PORT=5001
-# yOXstRuGMcEJipUh
-JWT_SECRET=myscretkey
-NODE_ENV=development
-
-CLOUDINARY_CLOUD_NAME=dtbgqeo0a
-CLOUDINARY_API_KEY=811826488893658
-CLOUDINARY_API_SECRET=oPDzaottP1R5SYtsWeTQw7efhrg
