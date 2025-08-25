@@ -68,24 +68,58 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+// export const deleteMessage = async (req, res) => {
+//   try {
+//     const { id } = req.params; // message id
+//     const userId = req.user._id; // logged-in user
+
+//     // find the message
+//     const message = await Message.findById(id);
+
+//     if (!message) {
+//       return res.status(404).json({ message: "Message not found" });
+//     }
+
+//     // Only sender can delete their own message
+//     if (message.senderId.toString() !== userId.toString()) {
+//       return res.status(403).json({ message: "You can only delete your own messages" });
+//     }
+
+//     await message.deleteOne();
+
+//     res.status(200).json({ message: "Message deleted successfully", deletedMessageId: id });
+//   } catch (error) {
+//     console.log("Error in deleteMessage controller:", error.message);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
 export const deleteMessage = async (req, res) => {
   try {
     const { id } = req.params; // message id
     const userId = req.user._id; // logged-in user
 
-    // find the message
     const message = await Message.findById(id);
-
     if (!message) {
       return res.status(404).json({ message: "Message not found" });
     }
 
-    // Only sender can delete their own message
     if (message.senderId.toString() !== userId.toString()) {
       return res.status(403).json({ message: "You can only delete your own messages" });
     }
 
     await message.deleteOne();
+
+    // --- Add socket emit here ---
+    const receiverSocketId = getReceiverSocketId(message.receiverId.toString());
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("messageDeleted", id);
+    }
+
+    // emit to sender as well so UI updates without refresh
+    const senderSocketId = getReceiverSocketId(userId.toString());
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("messageDeleted", id);
+    }
 
     res.status(200).json({ message: "Message deleted successfully", deletedMessageId: id });
   } catch (error) {
