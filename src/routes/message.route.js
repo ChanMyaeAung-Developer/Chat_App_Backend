@@ -9,5 +9,6 @@ router.get("/:id", protectRoute, getMessages);
 
 router.post("/send/:id", protectRoute, sendMessage);
 router.delete("/delete/:id", protectRoute, deleteMessage);
+router.delete("/:id", deleteMessage);
 
 export default router;
