@@ -1,14 +1,16 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+// import { useEffect } from "react";
+// import { io } from "socket.io-client";
 
 const app = express();
 const server = http.createServer(app);
-
+// const socket = io("http://localhost:5001", { query: { userId: currentUser._id } });
 const io = new Server(server, {
   cors: {
 
-    origin: ["http://localhost:5173"],
+    // origin: ["http://localhost:5173"],
     origin : "*"
 
   },
@@ -37,4 +39,13 @@ io.on("connection", (socket) => {
   });
 });
 
+// useEffect(() => {
+//   socket.on("messageDeleted", (deletedMessageId) => {
+//     setMessages(prevMessages => prevMessages.filter(msg => msg._id !== deletedMessageId));
+//   });
+
+//   return () => {
+//     socket.off("messageDeleted");
+//   };
+// }, []);
 export { io, app, server };
